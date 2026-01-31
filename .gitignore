@@ -1,0 +1,17 @@
+# Java
+target/
+*.log
+
+# Node
+node_modules/
+dist/
+
+# IDE
+.idea/
+.vscode/
+
+# Env
+.env
+
+docs
+AuthService1.zip

@@ -1,0 +1,98 @@
+   NOTES::
+
+
+ HTTP Request → Controller → Service → Repository → Database
+                    ↓           ↓          ↓
+                  DTO      Business    Entity
+                           Logic
+
+ Controller → HTTP only
+
+Service → business logic
+
+Repository → DB only
+
+Entity → table mapping
+
+DTO → API contract
+
+Exception → centralized
+
+Same architecture as Express, just more enforced
+
+
+ MERN and SB
+┌─────────────────────┬──────────────────────────┬─────────────────────┐
+        │   Spring Boot       │      Express.js          │      Purpose        │
+        ├─────────────────────┼──────────────────────────┼─────────────────────┤
+        │                     │                          │                     │
+        │  @RestController    │  app.get/post/put/delete │  Route handlers     │
+        │         │           │           │              │         │           │
+        │         ▼           │           ▼              │         ▼           │
+        │                     │                          │                     │
+        │    @Service         │  Middleware/Services     │  Business logic     │
+        │         │           │           │              │         │           │
+        │         ▼           │           ▼              │         ▼           │
+        │                     │                          │                     │
+        │   @Repository       │  Database models/queries │  Data access        │
+        │         │           │           │              │         │           │
+        │         ▼           │           ▼              │         ▼           │
+        │                     │                          │                     │
+        │     @Entity         │  Mongoose/Sequelize      │  Database models    │
+        │                     │                          │                     │
+        ├─────────────────────┼──────────────────────────┼─────────────────────┤
+        │                     │                          │                     │
+        │       DTO           │  Request/Response objects│  Data validation    │
+        │                     │                          │                     │
+        │   @Autowired        │  require() / imports     │  Dependency inject  │
+        │                     │                          │                     │
+        │ application.        │      .env / config       │  Configuration      │
+        │  properties         │                          │                     │
+        │                     │                          │                     │
+        │ @Transactional      │  DB transactions         │  Transaction mgmt   │
+        │                     │                          │                     │
+        └─────────────────────┴──────────────────────────┴─────────────────────┘
+
+HTTP Request
+          │
+          ▼
+    ┌──────────────┐
+    │ @Controller  │ ◄──── Handles HTTP, validates input
+    │  (Routes)    │
+    └──────┬───────┘
+           │
+           │ uses DTO (Request)
+           │
+           ▼
+    ┌──────────────┐
+    │  @Service    │ ◄──── Business logic, transactions
+    │ (Logic Layer)│
+    └──────┬───────┘
+           │
+           │ uses Entity
+           │
+           ▼
+    ┌──────────────┐
+    │ @Repository  │ ◄──── Database queries (CRUD)
+    │ (Data Layer) │
+    └──────┬───────┘
+           │
+           ▼
+    ┌──────────────┐
+    │   Database   │ ◄──── Actual data storage
+    │   (MySQL/    │
+    │   Postgres)  │
+    └──────────────┘
+           │
+           │ returns Entity
+           │
+           ▼
+    [ Service processes ]
+           │
+           │ converts to DTO (Response)
+           │
+           ▼
+    [ Controller returns JSON ]
+           │
+           ▼
+     HTTP Response
