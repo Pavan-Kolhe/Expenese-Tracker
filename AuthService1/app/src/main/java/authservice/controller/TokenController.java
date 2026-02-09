@@ -22,16 +22,20 @@ import org.springframework.web.bind.annotation.RequestBody;
 public class TokenController
 {
 
-    @Autowired
-    private AuthenticationManager authenticationManager;
+    private final AuthenticationManager authenticationManager;
 
-    @Autowired
-    private RefreshTokenService refreshTokenService;
+    private final RefreshTokenService refreshTokenService;
 
-    @Autowired
-    private JwtService jwtService;
+    private final JwtService jwtService;
 
-//    @PostMapping("auth/v1/login")
+    public TokenController(AuthenticationManager authenticationManager, RefreshTokenService refreshTokenService, JwtService jwtService) {
+        this.authenticationManager = authenticationManager;
+        this.refreshTokenService = refreshTokenService;
+        this.jwtService = jwtService;
+    }
+
+
+    //    @PostMapping("auth/v1/login")
 //    public ResponseEntity AuthenticateAndGetToken(@RequestBody AuthRequestDTO authRequestDTO){
 //        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authRequestDTO.getUsername(), authRequestDTO.getPassword()));
 //        if(authentication.isAuthenticated()){
