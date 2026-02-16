@@ -1,0 +1,57 @@
+# ===============================
+# JWT Security Configuration
+# ===============================
+# ⚠️ SECURITY WARNING: Change this secret in your local file!
+# Do not use the default value below in production.
+jwt.secret=YOUR_SUPER_SECRET_KEY_GOES_HERE_MIN_32_CHARS
+jwt.expiration=86400000
+REFRESH_TOKEN_EXPIRY=2592000000
+
+# ===============================
+# Database Configuration
+# ===============================
+spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
+spring.datasource.url=jdbc:mysql://localhost:3306/authservice?useSSL=false&allowPublicKeyRetrieval=true
+spring.datasource.username=root
+
+# ⚠️ PASSWORD REQUIRED
+spring.datasource.password=YOUR_DB_PASSWORD_HERE
+
+# Hibernate & JPA
+spring.jpa.hibernate.ddl-auto=update
+spring.jpa.show-sql=true
+spring.jpa.database-platform=org.hibernate.dialect.MySQL8Dialect
+spring.jpa.properties.hibernate.hbm2ddl.auto=update
+
+# ===============================
+# Server & Logging
+# ===============================
+server.port=9898
+spring.cloud.config.enabled=false
+logging.level.org.springframework.security=DEBUG
+# Replace 'your.package.name' with your actual package
+logging.level.authservice=DEBUG
+
+# ===============================
+# Kafka Configuration (Producer)
+# ===============================
+spring.kafka.producer.bootstrap-servers=localhost:9092
+spring.kafka.topic-json.name=user_service
+
+# Producer Reliability Settings
+spring.kafka.producer.properties.max.in.flight.requests.per.connection=1
+spring.kafka.producer.properties.retries=3
+spring.kafka.producer.properties.acks=all
+
+# Serialization
+spring.kafka.producer.key-serializer=org.apache.kafka.common.serialization.StringSerializer
+spring.kafka.producer.value-serializer=authservice.serializer.UserInfoSerializer
+spring.kafka.producer.properties.spring.json.type.mapping=auth:authservice.model.UserInfoEvent
+
+# Kafka Logging
+logging.level.org.apache.kafka=DEBUG
+logging.level.org.springframework.kafka=DEBUG
+
+# Security Deprecations (Review if needed)
+security.basic.enable=false
+security.ignored=/**
