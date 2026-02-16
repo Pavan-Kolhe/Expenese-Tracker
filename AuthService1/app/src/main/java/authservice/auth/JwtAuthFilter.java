@@ -20,15 +20,17 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
 
 @Component
-@AllArgsConstructor
-@Data
+//@Data
 public class JwtAuthFilter extends OncePerRequestFilter
 {
 
-    @Autowired
     private final JwtService jwtService;
-    @Autowired
     private final UserDetailServiceImpl userDetailsService;
+
+    public JwtAuthFilter(JwtService jwtService, UserDetailServiceImpl userDetailsService) {
+        this.jwtService = jwtService;
+        this.userDetailsService = userDetailsService;
+    }
 
 
     @Override

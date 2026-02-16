@@ -1,0 +1,44 @@
+spring.application.name=Userservice
+
+# ===============================
+# Kafka Configuration
+# ===============================
+# Default to localhost for local development
+spring.kafka.bootstrap-servers=localhost:9092
+spring.kafka.consumer.auto-offset-reset=earliest
+spring.kafka.consumer.group-id=userinfo-consumer-group
+spring.kafka.topic-json.name=user_service
+
+# Performance Settings
+spring.kafka.consumer.properties.max.poll.interval.ms=300000
+spring.kafka.consumer.properties.session.timeout.ms=45000
+
+# JSON Mapping
+spring.kafka.consumer.properties.spring.json.trusted.packages=*
+spring.kafka.consumer.properties.spring.json.type.mapping=auth:expensetracker.Userservice.entities.UserInfoDto
+
+# ===============================
+# Database Configuration
+# ===============================
+spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
+
+#  FILL IN YOUR CREDENTIALS BELOW
+spring.datasource.username=root
+spring.datasource.password=YOUR_PASSWORD_HERE
+
+# Update URL if your DB name or port is different
+spring.datasource.url=jdbc:mysql://localhost:3306/userservice?useSSL=false&useUnicode=yes&characterEncoding=UTF-8&allowPublicKeyRetrieval=true
+
+# JPA / Hibernate
+spring.jpa.show-sql=true
+spring.jpa.hibernate.ddl-auto=update
+spring.datasource.hikari.maximum-pool-size=20
+spring.datasource.hikari.minimum-idle=10
+
+# ===============================
+# Server & Logging
+# ===============================
+server.port=9810
+logging.level.org.apache.kafka=INFO
+logging.level.org.springframework.kafka=INFO
+logging.level.expensetracker.Userservice=INFO
