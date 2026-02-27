@@ -40,14 +40,24 @@ public class RefreshTokenService {
 
     public RefreshToken createRefreshToken(String username){
         UserInfo  userInfoExtracted = userRepository.findByUsername(username);
+        RefreshToken refreshToken = refreshTokenRepository.findByUserInfo(userInfoExtracted)
+                .orElse(new RefreshToken());
 
-        RefreshToken refreshToken = RefreshToken.builder()
-                .userInfo(userInfoExtracted)
-                .token(UUID.randomUUID().toString())
-                .expiryDate(Instant.now().plusMillis(refreshTokenExpiry))
-                .build();
+        // 2. Update the fields (Hibernate will cleverly UPDATE if it existed, or INSERT if new)
+        refreshToken.setUserInfo(userInfoExtracted);
+        refreshToken.setToken(UUID.randomUUID().toString());
+        refreshToken.setExpiryDate(Instant.now().plusMillis(refreshTokenExpiry));
 
+        // 3. Save to database
         return refreshTokenRepository.save(refreshToken);
+
+//        RefreshToken refreshToken = RefreshToken.builder()
+//                .userInfo(userInfoExtracted)
+//                .token(UUID.randomUUID().toString())
+//                .expiryDate(Instant.now().plusMillis(refreshTokenExpiry))
+//                .build();
+//
+//        return refreshTokenRepository.save(refreshToken);
 
         /*
        above one is same as

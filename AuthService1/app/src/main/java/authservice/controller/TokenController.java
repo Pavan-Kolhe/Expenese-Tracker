@@ -77,6 +77,7 @@ public ResponseEntity AuthenticateAndGetToken(@RequestBody AuthRequestDTO authRe
         return new ResponseEntity<>("Invalid username or password", HttpStatus.UNAUTHORIZED);
     } catch (Exception e) {
         // 5. Handle generic errors
+        e.printStackTrace();
         return new ResponseEntity<>("Exception in User Service", HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }
