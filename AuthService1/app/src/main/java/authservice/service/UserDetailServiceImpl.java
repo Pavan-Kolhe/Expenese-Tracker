@@ -16,6 +16,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.HashSet;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.UUID;
 
 
@@ -42,14 +43,14 @@ public class UserDetailServiceImpl implements UserDetailsService {
         return userRepository.findByUsername(user.getUsername());
     }
 
-    public Boolean signupUser(UserInfoDto userInfoDto){
+    public String signupUser(UserInfoDto userInfoDto){
         if(!ValidationUtil.validateUser(userInfoDto)){
-            return false;
+            return null;
         }
             userInfoDto.setPassword(passwordEncoder.encode(userInfoDto.getPassword()));
 
             if(Objects.nonNull(checkIfUserAlreadyExists(userInfoDto))){
-                return  false;
+                return  null;
             }
 
             String userId = UUID.randomUUID().toString();
@@ -65,7 +66,10 @@ public class UserDetailServiceImpl implements UserDetailsService {
 
         // pushEvent to Queue
         userInfoProducer.sendEventToKafka(userInfoEvent(userInfoDto,userId));
-        return true;
+        return userId;
+    }
+    public String getUserByUsername(String userName){
+        return Optional.of(userRepository.findByUsername(userName)).map(UserInfo::getUserId).orElse(null);
     }
 
     private UserInfoEvent userInfoEvent(UserInfoDto userInfoDto,String userId){
